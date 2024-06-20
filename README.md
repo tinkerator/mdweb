@@ -3,8 +3,10 @@
 ## Overview
 
 The `mdweb` program is a local webserver for serving up rendered `.md`
-files and other content. It serves files from the working directory
-and converts `.md` files to HTML in order to render them.
+files and other content. It converts `.md` files to HTML in order to
+render them with customized [fonts](/fonts.css) and [site](/site.css)
+style (both of these files are embedded into the `mdweb` binary at
+build time).
 
 To use `mdweb` for the first time, just run these commands:
 ```
@@ -15,9 +17,10 @@ $ go build
 $ ./mdweb
 ```
 By default, `mdweb` listens to `localhost:8080` and serves files
-rooted in the working directory. You can override this default with
-the `--addr` argument. As a first example, when run from this present
-directory, point your browser to http://localhost:8080/README.md.
+rooted in the working directory. You can override these defaults with
+the `--addr` and `--base` arguments respectively. As a first example,
+when run from this present directory, point your browser to
+http://localhost:8080/README.md.
 
 ## License info
 

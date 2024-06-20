@@ -12,7 +12,9 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
@@ -21,22 +23,57 @@ import (
 	"github.com/gomarkdown/markdown"
 )
 
-var addr = flag.String("addr", "localhost:8080", "address to listen to for web request")
+var (
+	addr = flag.String("addr", "localhost:8080", "address to listen to for web request")
+	base = flag.String("base", "./", "base directory for html pages")
+)
+
+//go:embed css/site.css
+var siteCSS []byte
+
+//go:embed css/fonts.css
+var fontsCSS []byte
+
+var header = template.Must(template.New("name").Parse(`<!DOCTYPE html>
+<html>
+  <header>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="/fonts.css">
+    <link rel="stylesheet" href="/site.css">
+    <title>{{.}}</title>
+  </header>
+  <body>
+`))
+
+var footer = []byte(`  </body>
+</html>`)
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	path := r.URL.Path
 	if strings.Contains(path, "..") {
 		http.NotFound(w, r)
 		return
-	} else if strings.HasSuffix(path, ".md") {
-		data, err := os.ReadFile("./" + path)
+	}
+	if strings.HasSuffix(path, ".md") {
+		data, err := os.ReadFile(*base + path)
 		if err != nil {
 			http.NotFound(w, r)
 			return
 		}
+		header.Execute(w, path)
 		w.Write(markdown.ToHTML(data, nil, nil))
-	} else {
-		http.ServeFile(w, r, "./"+path)
+		w.Write(footer)
+		return
+	}
+	switch path {
+	case "/fonts.css":
+		w.Header().Add("Content-Type", "text/css")
+		w.Write(fontsCSS)
+	case "/site.css":
+		w.Header().Add("Content-Type", "text/css")
+		w.Write(siteCSS)
+	default:
+		http.ServeFile(w, r, *base+path)
 	}
 }
 
