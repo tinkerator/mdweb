@@ -3,11 +3,11 @@ body {
 }
 
 h1 {
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 
 h2 {
-    font-size: 1.375rem;
+    font-size: 1.5rem;
 }
 
 h3 {
@@ -31,4 +31,18 @@ pre {
     border: 1px solid #77c;
     width: 95%;
     padding: .5em;
+}
+
+table, td {
+    border: 1px solid #55f;
+    background-color: #def;
+    border-collapse: collapse;
+    padding: .25em;
+}
+
+th {
+    border: 1px solid #55f;
+    background-color: #bdf;
+    border-collapse: collapse;
+    padding: .25em;
 }
