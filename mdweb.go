@@ -21,11 +21,13 @@ import (
 	"strings"
 
 	"github.com/gomarkdown/markdown"
+	mdh "github.com/gomarkdown/markdown/html"
 )
 
 var (
-	addr = flag.String("addr", "localhost:8080", "address to listen to for web request")
-	base = flag.String("base", "./", "base directory for html pages")
+	addr     = flag.String("addr", "localhost:8080", "address to listen to for web request")
+	base     = flag.String("base", "./", "base directory for html pages")
+	renderer *mdh.Renderer
 )
 
 //go:embed css/site.css
@@ -61,7 +63,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		header.Execute(w, path)
-		w.Write(markdown.ToHTML(data, nil, nil))
+		w.Write(markdown.ToHTML(data, nil, renderer))
 		w.Write(footer)
 		return
 	}
@@ -80,6 +82,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 
+	renderer = mdh.NewRenderer(mdh.RendererOptions{
+		Flags: mdh.TOC,
+	})
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(*addr, nil))
 }
