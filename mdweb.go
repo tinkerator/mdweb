@@ -83,7 +83,7 @@ func main() {
 	flag.Parse()
 
 	renderer = mdh.NewRenderer(mdh.RendererOptions{
-		Flags: mdh.TOC,
+		Flags: mdh.CommonFlags | mdh.HrefTargetBlank | mdh.TOC,
 	})
 	http.HandleFunc("/", handler)
 	log.Fatal(http.ListenAndServe(*addr, nil))
