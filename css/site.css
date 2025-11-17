@@ -26,6 +26,16 @@ h6 {
     font-size: .875rem;
 }
 
+nav {
+    border: 1px solid #77c;
+    width: 95%;
+    padding: .5em;
+}
+
+code {
+    background-color: #def;
+}
+
 pre {
     background-color: #def;
     border: 1px solid #77c;
